@@ -35,6 +35,10 @@ public class RuleBook {
        byte piece =  position.pieces[original.x][original.y];
         byte capturedPiece = position.pieces[newSquare.x][newSquare.y];
 
+        //If square is empty
+        if(piece == 0)
+            return false;
+
         // If captured piece is white and moving piece is white...
         if (pieceIsWhite(capturedPiece) && (pieceIsWhite(piece))) {
             return false;

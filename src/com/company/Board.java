@@ -22,7 +22,7 @@ public class Board {
 
         scanner = new Scanner(System.in);
 
-        System.out.println("Welcome to Sitche Command Line!");
+        System.out.println("Welcome to Sitche Command Line!\n");
 
         System.out.print("Do you want to use multithreading? (Y/N): ");
         boolean multithreading = scanner.nextLine().startsWith("Y");
@@ -58,74 +58,98 @@ public class Board {
         currentPosition = new Position();
 
         render();
-        playGame();
+
+        while (true)
+            playGame();
     }
 
     private static void playGame() {
         if (Opponent.IAmWhite == whitesTurn) {
-            Opponent.makeMove(currentPosition);
+            currentPosition = Opponent.makeMove(currentPosition);
         } else {
             requestMove();
         }
         render();
+        whitesTurn = !whitesTurn;
     }
 
 
     static final char border = '#';
 
     protected static void render() {
-        for (int i = 0; i < 8 * 3; i++) {
+        printSide();
+
+        for (int i = 0; i < 8; i++) {
+            System.out.print(8 - i + " " + border + " ");
+            for (int j = 0; j < 8; j++) {
+                System.out.print(getSymbol(currentPosition.pieces[j][7 - i]) + "  ");
+
+            }
+            System.out.print(border + " ");
+            System.out.println();
+        }
+        printSide();
+        printFile();
+
+        System.out.println();
+    }
+
+    private static void printSide() {
+        System.out.print("  ");
+        for (int i = 0; i < 9 * 3; i++) {
             System.out.print(border);
         }
         System.out.println();
+    }
 
-        for (int i = 0; i < 8; i++) {
-            System.out.print(border);
-            for (int j = 0; j < 8; j++) {
-                System.out.print(currentPosition.pieces[j][i]. + "  ");
-
-            }
-            System.out.println();
-        }
+    private static void printFile() {
+        System.out.print("    ");
         for (int i = 0; i < 8; i++) {
             System.out.print((char) ('A' + i) + "  ");
         }
-        if (Opponent.IAmWhite == whitesTurn) {
-            currentPosition = Opponent.makeMove(currentPosition);
-            whitesTurn = !whitesTurn;
-        }
-        System.out.println();
     }
 
     private static char getSymbol(byte code) {
         switch (code) {
+            case 0:
+                return '-';
+
             case -1:
                 return 'p';
-            break;
             case -2:
-                return 'p';
-            break;
+                return 'r';
+
             case -3:
-                return 'p';
-            break;
+                return 'n';
+
             case -4:
-                return 'p';
-            break;
+                return 'b';
+
             case -5:
-                return 'p';
-            break;
+                return 'q';
+
             case -6:
-                return 'p';
-            break;
+                return 'k';
+
+
             case 1:
                 return 'P';
-            break;
+            case 2:
+                return 'R';
+
+            case 3:
+                return 'N';
+            case 4:
+                return 'B';
+            case 5:
+                return 'Q';
+            case 6:
+                return 'K';
 
             default:
-                break;
+                return 'X';
         }
     }
-
 
     static void requestMove() {
         while (true) {
@@ -144,18 +168,15 @@ public class Board {
                     int toX = input.charAt(3) - 'A';
                     int toY = input.charAt(4) - '1';
 
+                    if (ruleBook.isMoveLegal(currentPosition, new Point(fromX, fromY), new Point(toX, toY), false)) {
 
-                    if (ruleBook.isMoveLegal(currentPosition, new Point(fromX, fromY), new Point(toX, toY), false)) ;
-
-                    Position attemptedPosition = new Position(currentPosition, fromX, fromY, toX, toY);
-                    if (!attemptedPosition.kingIsInCheck(!Opponent.IAmWhite)) {
-                        currentPosition = attemptedPosition;
-                        whitesTurn = !whitesTurn;
-                        break;
-                    } else {
+                        Position attemptedPosition = new Position(currentPosition, fromX, fromY, toX, toY);
+                        if (!attemptedPosition.kingIsInCheck(!Opponent.IAmWhite)) {
+                            currentPosition = attemptedPosition;
+                            break;
+                        }
                         System.out.println("Moving into check!");
                     }
-
                 }
             }
             System.out.println("Invalid!");

@@ -8,12 +8,11 @@ public class Opponent {
     public static RuleBook ruleBook;
 
     private boolean multithreading;
-    private DecimalFormat decimalFormat;
+    private final DecimalFormat decimalFormat =   new DecimalFormat("###,###,###");;
 
     public Opponent(boolean white, boolean multithreading) {
         IAmWhite = white;
         ruleBook = new RuleBook();
-        decimalFormat = new DecimalFormat("###,###,###");
         this.multithreading = multithreading;
     }
 
@@ -21,7 +20,6 @@ public class Opponent {
         while (initialPosition.depth != 0) {
             initialPosition.shiftDepth();
         }
-        System.out.println("\n######################################\n");
 
         long beginningTime = System.currentTimeMillis();
 
