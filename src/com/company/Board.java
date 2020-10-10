@@ -3,8 +3,6 @@ package com.company;
 import java.awt.*;
 import java.util.Scanner;
 
-import static com.company.Piece.*;
-
 public class Board {
 
     static RuleBook ruleBook;
@@ -24,22 +22,42 @@ public class Board {
 
         System.out.println("Welcome to Sitche Command Line!\n");
 
-        System.out.print("Do you want to use multithreading? (Y/N): ");
-        boolean multithreading = scanner.nextLine().startsWith("Y");
-
-        System.out.print("Do you want to play as white? (Y/N): ");
-        boolean whitePlayer = scanner.nextLine().startsWith("Y");
-
+        boolean multithreading;
+        while (true) {
+            System.out.print("Do you want to use multithreading? (Y/N): ");
+            String response = scanner.nextLine();
+            if (Character.toLowerCase(response.charAt(0)) == 'y' || Character.toLowerCase(response.charAt(0)) == 'n') {
+                multithreading = Character.toLowerCase(response.charAt(0)) == 'y';
+                break;
+            } else {
+                System.out.println("Invalid!");
+            }
+        }
+        boolean whitePlayer;
+        while (true) {
+            System.out.print("Do you want to play as white? (Y/N): ");
+            String response = scanner.nextLine();
+            if (Character.toLowerCase(response.charAt(0)) == 'y' || Character.toLowerCase(response.charAt(0)) == 'n') {
+                whitePlayer = Character.toLowerCase(response.charAt(0)) == 'y';
+                break;
+            } else {
+                System.out.println("Invalid");
+            }
+        }
         Opponent = new Opponent(!whitePlayer, multithreading);
 
 
         while (true) {
             int depthValue = 0;
             System.out.print("How many moves do you want the opponent to search ahead? [1-5]: ");
-            depthValue = Integer.parseInt(scanner.nextLine());
-            if (depthValue < 6 && depthValue > 1) {
-                Position.maxSearchDepth = depthValue;
-                break;
+            try {
+                depthValue = Integer.parseInt(scanner.nextLine());
+                if (depthValue < 6 && depthValue > 0) {
+                    Position.maxSearchDepth = depthValue;
+                    break;
+                }
+            } catch (Exception e) {
+
             }
             System.out.println("Invalid!");
         }
@@ -52,7 +70,7 @@ public class Board {
 
         System.out.println();
 
-        System.out.println("Pieces are represented by their characters in chess notation. (The letter that they start with, except for knights, which start with \"N\")");
+        System.out.println("Pieces are represented by their characters in chess notation. (The letter that they start with, except for knights, which are shown with \"N\" or \"n\")");
         System.out.println("White pieces are uppercase, black pieces are lowercase.");
 
         currentPosition = new Position();
@@ -64,6 +82,8 @@ public class Board {
     }
 
     private static void playGame() {
+        currentPosition.whiteToMove = whitesTurn;
+
         if (Opponent.IAmWhite == whitesTurn) {
             currentPosition = Opponent.makeMove(currentPosition);
         } else {
@@ -153,13 +173,12 @@ public class Board {
 
     static void requestMove() {
         while (true) {
-
             System.out.print("Enter your move: ");
             String input = scanner.nextLine();
             if (input.length() >= 5) {
-                if (input.charAt(0) >= 'A' && input.charAt(0) <= 'G' &&
+                if (input.charAt(0) >= 'A' && input.charAt(0) <= 'H' &&
                         input.charAt(1) >= '1' && input.charAt(1) <= '8' &&
-                        input.charAt(3) >= 'A' && input.charAt(3) <= 'G' &&
+                        input.charAt(3) >= 'A' && input.charAt(3) <= 'H' &&
                         input.charAt(4) >= '1' && input.charAt(4) <= '8') {
 
                     int fromX = input.charAt(0) - 'A';
@@ -168,7 +187,7 @@ public class Board {
                     int toX = input.charAt(3) - 'A';
                     int toY = input.charAt(4) - '1';
 
-                    if (ruleBook.isMoveLegal(currentPosition, new Point(fromX, fromY), new Point(toX, toY), false)) {
+                    if (ruleBook.isMoveLegal(currentPosition, new Point(fromX, fromY), new Point(toX, toY), false) && (currentPosition.pieces[fromX][fromY] > 0 == whitesTurn)) {
 
                         Position attemptedPosition = new Position(currentPosition, fromX, fromY, toX, toY);
                         if (!attemptedPosition.kingIsInCheck(!Opponent.IAmWhite)) {

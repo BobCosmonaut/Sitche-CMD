@@ -49,14 +49,4 @@ public class Opponent {
         System.out.println("Moved after " + decimalFormat.format(System.currentTimeMillis() - beginningTime) + " milliseconds.");
         return returnPosition;
     }
-
-    Position bestParent;
-    Position bestOutcome;
-
-    synchronized void challengeBestMove(Position outcome, Position parent) {
-        if (bestOutcome == null || bestParent == null) {
-            bestParent = parent;
-            bestOutcome = outcome;
-        }
-    }
 }
