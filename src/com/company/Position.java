@@ -14,7 +14,6 @@ public class Position {
     byte[][] pieces;
 
     ArrayList<Position> subpositons;
-    Enpassant enpassant;
     byte score;
     short positionalScore;
     boolean whiteToMove = true;
@@ -24,7 +23,6 @@ public class Position {
 
     public Position bestImmediateMove(boolean multiThreading) {
         if (subpositons.size() == 0) {
-            System.out.println("Game Over");
             return this;
         }
 
@@ -173,7 +171,6 @@ public class Position {
                 }
             }
 
-            //FIXME (and has subpositions?)
             if (recursively) {
                 for (int i = 0; i < subpositons.size(); i++) {
                     subpositons.get(i).findAllMoves(true);
@@ -184,6 +181,26 @@ public class Position {
             }
         }
     }
+
+    /**
+     *
+     * @return -128 if white is mated, 127 if black is mated, -1 for stalemate, 0 for a normal position.
+     */
+    public int gameOver() {
+        if(kingIsInCheck(true)){
+            return Byte.MIN_VALUE;
+        }
+
+        if(kingIsInCheck(false)){
+            return Byte.MAX_VALUE;
+        }
+
+
+
+
+        return -1;
+    }
+
 
     public void score() {
         // If is an end game position...
@@ -244,7 +261,6 @@ public class Position {
     public Position(Position parent, int toX, int toY, int fromX, int fromY) {
         totalPositions++;
         pieces = createNewLocations(parent.pieces, toX, toY, fromX, fromY);
-        enpassant = new Enpassant((byte) 0, (byte) 0);
         depth = parent.depth;
         depth += 1;
         whiteToMove = !parent.whiteToMove;
@@ -252,7 +268,6 @@ public class Position {
     }
 
     public Position() {
-        enpassant = new Enpassant((byte) 0, (byte) 0);
         pieces = new byte[8][8];
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
@@ -505,58 +520,42 @@ public class Position {
         if (squareExists(x + 1, y)) {
             if (isLandable(pieces[x + 1][y])) {
                 subpositons.add(new Position(this, x, y, x + 1, y));
-
             }
-
         }
         if (squareExists(x + 1, y - 1)) {
             if (isLandable(pieces[x + 1][y - 1])) {
                 subpositons.add(new Position(this, x, y, x + 1, y - 1));
-
             }
-
         }
         if (squareExists(x + 1, y + 1)) {
             if (isLandable(pieces[x + 1][y + 1])) {
                 subpositons.add(new Position(this, x, y, x + 1, y + 1));
-
             }
-
         }
         if (squareExists(x, y + 1)) {
             if (isLandable(pieces[x][y + 1])) {
                 subpositons.add(new Position(this, x, y, x, y + 1));
-
             }
-
         }
         if (squareExists(x, y - 1)) {
             if (isLandable(pieces[x][y - 1])) {
                 subpositons.add(new Position(this, x, y, x, y - 1));
-
             }
-
         }
         if (squareExists(x - 1, y)) {
             if (isLandable(pieces[x - 1][y])) {
                 subpositons.add(new Position(this, x, y, x - 1, y));
-
             }
-
         }
         if (squareExists(x - 1, y + 1)) {
             if (isLandable(pieces[x - 1][y + 1])) {
                 subpositons.add(new Position(this, x, y, x - 1, y + 1));
-
             }
-
         }
         if (squareExists(x - 1, y - 1)) {
             if (isLandable(pieces[x - 1][y - 1])) {
                 subpositons.add(new Position(this, x, y, x - 1, y - 1));
-
             }
-
         }
     }
 

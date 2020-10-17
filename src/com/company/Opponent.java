@@ -8,7 +8,7 @@ public class Opponent {
     public static RuleBook ruleBook;
 
     private boolean multithreading;
-    private final DecimalFormat decimalFormat =   new DecimalFormat("###,###,###");;
+    private final DecimalFormat decimalFormat =   new DecimalFormat("###,###,###");
 
     public Opponent(boolean white, boolean multithreading) {
         IAmWhite = white;

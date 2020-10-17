@@ -77,8 +77,20 @@ public class Board {
 
         render();
 
-        while (true)
+        while (true) {
             playGame();
+            int result = currentPosition.gameOver();
+
+            switch (result){
+                case Byte.MAX_VALUE:
+                    System.out.println("Checkmate - White wins!");
+                    break;
+                case Byte.MIN_VALUE:
+                    System.out.println("Checkmate - Black wins!");
+                    break;
+                default:
+            }
+        }
     }
 
     private static void playGame() {

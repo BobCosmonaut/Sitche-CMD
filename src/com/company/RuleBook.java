@@ -32,11 +32,11 @@ public class RuleBook {
 
     public boolean isMoveLegal(Position position, Point original, Point newSquare, boolean hypothetical) {
 
-       byte piece =  position.pieces[original.x][original.y];
+        byte piece = position.pieces[original.x][original.y];
         byte capturedPiece = position.pieces[newSquare.x][newSquare.y];
 
         //If square is empty
-        if(piece == 0)
+        if (piece == 0)
             return false;
 
         // If captured piece is white and moving piece is white...
@@ -68,9 +68,6 @@ public class RuleBook {
                 } else if (original.y == 6 && squareIsEmpty(position.pieces[original.x][original.y - 1])
                         && squareIsEmpty(position.pieces[original.x][original.y - 2])
                         && original.x == newSquare.x && newSquare.y == 4) {
-                    if (!hypothetical) {
-                        position.enpassant.setLocation((byte)original.x, (byte)(original.y + 1));
-                    }
                     return true;
                 } else {
                     return false;
@@ -78,15 +75,6 @@ public class RuleBook {
             } else if (!squareIsEmpty(capturedPiece)) {
                 if (original.y == newSquare.y + 1 && Math.abs(original.x - newSquare.x) == 1) {
                     return true;
-                } else if (position.enpassant.x == (byte)(newSquare.x) && position.enpassant.y == (byte)(newSquare.y)) {
-                    if (original.y == newSquare.y + 1 && Math.abs(original.x - newSquare.x) == 1) {
-                        if (newSquare.y == 0 && !hypothetical) {
-                            position.pieces[newSquare.x][newSquare.y] = bQueen.code;
-                        }
-                        return true;
-                    } else {
-                        return false;
-                    }
                 } else {
                     return false;
                 }
@@ -106,9 +94,6 @@ public class RuleBook {
                 } else if (original.y == 1 && squareIsEmpty(position.pieces[original.x][original.y + 1])
                         && squareIsEmpty(position.pieces[original.x][original.y + 2])
                         && original.x == newSquare.x && newSquare.y == 3) {
-                    if (!hypothetical) {
-                        position.enpassant.setLocation((byte)original.x, (byte)(original.y - 1));
-                    }
                     return true;
                 } else {
                     return false;
