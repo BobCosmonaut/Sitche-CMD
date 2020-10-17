@@ -184,7 +184,7 @@ public class Position {
 
     /**
      *
-     * @return -128 if white is mated, 127 if black is mated, -1 for stalemate, 0 for a normal position.
+     * @return -128 if white is mated, 127 if black is mated, 0 for a normal position.
      */
     public int gameOver() {
         if(kingIsInCheck(true)){
@@ -194,11 +194,7 @@ public class Position {
         if(kingIsInCheck(false)){
             return Byte.MAX_VALUE;
         }
-
-
-
-
-        return -1;
+        return 0;
     }
 
 
@@ -259,7 +255,7 @@ public class Position {
     }
 
     public Position(Position parent, int toX, int toY, int fromX, int fromY) {
-        totalPositions++;
+        addToTotal();
         pieces = createNewLocations(parent.pieces, toX, toY, fromX, fromY);
         depth = parent.depth;
         depth += 1;
@@ -678,6 +674,10 @@ public class Position {
 
         }
         return piecesS;
+    }
+
+    public static synchronized void addToTotal(){
+        totalPositions ++;
     }
 
 }
