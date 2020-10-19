@@ -184,17 +184,22 @@ public class Position {
 
     /**
      *
-     * @return -128 if white is mated, 127 if black is mated, 0 for a normal position.
+     * @return -128 if white is mated, 127 if black is mated, -1 for a stalemate, 0 for a normal position.
      */
     public int gameOver() {
+        findAllMoves(false);
+
+        if(subpositons.size() > 0){
+            subpositons.clear();
+            return 0;
+        }
         if(kingIsInCheck(true)){
             return Byte.MIN_VALUE;
         }
-
         if(kingIsInCheck(false)){
             return Byte.MAX_VALUE;
         }
-        return 0;
+        return -1;
     }
 
 
