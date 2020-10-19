@@ -81,12 +81,15 @@ public class Board {
             playGame();
             int result = currentPosition.gameOver();
 
-            switch (result){
+            switch (result) {
                 case Byte.MAX_VALUE:
                     System.out.println("Checkmate - White wins!");
                     break;
                 case Byte.MIN_VALUE:
                     System.out.println("Checkmate - Black wins!");
+                    break;
+                case -1:
+                    System.out.println("Stalemate!");
                     break;
                 default:
             }
